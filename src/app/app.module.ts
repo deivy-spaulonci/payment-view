@@ -1,18 +1,99 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {LOCALE_ID, NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {DespesaListComponent} from './component/despesa/despesa-list/despesa-list.component';
+import {HomeComponent} from './component/home/home.component';
+
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {HttpClientModule} from "@angular/common/http";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+
+import {InputTextModule} from 'primeng/inputtext';
+import {MenubarModule} from 'primeng/menubar';
+import {MegaMenuModule} from 'primeng/megamenu';
+import {MenuModule} from 'primeng/menu';
+import {PanelModule} from 'primeng/panel';
+import {ButtonModule} from 'primeng/button';
+import {ToolbarModule} from 'primeng/toolbar';
+import {TieredMenuModule} from 'primeng/tieredmenu';
+import {SlideMenuModule} from 'primeng/slidemenu';
+import {PanelMenuModule} from 'primeng/panelmenu';
+import {TableModule} from 'primeng/table';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
+import {ToastModule} from 'primeng/toast';
+import {DropdownModule} from 'primeng/dropdown';
+import {InputMaskModule} from 'primeng/inputmask';
+import {FieldsetModule} from 'primeng/fieldset';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {TooltipModule} from 'primeng/tooltip';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {CalendarModule} from 'primeng/calendar';
+import {KeyFilterModule} from 'primeng/keyfilter';
+import {FocusTrapModule} from 'primeng/focustrap';
+import {ContextMenuModule} from 'primeng/contextmenu';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {AutoCompleteModule} from 'primeng/autocomplete';
+import {TreeModule} from 'primeng/tree';
+import {TreeTableModule} from 'primeng/treetable';
+
+import ptBr from '@angular/common/locales/pt';
+import { registerLocaleData } from '@angular/common';
+import { DespesaFormComponent } from './component/despesa/despesa-form/despesa-form.component';
+
+registerLocaleData(ptBr);
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DespesaListComponent,
+    HomeComponent,
+    DespesaFormComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    MenubarModule,
+    MegaMenuModule,
+    MenuModule,
+    ButtonModule,
+    ToolbarModule,
+    TieredMenuModule,
+    SlideMenuModule,
+    PanelMenuModule,
+    TableModule,
+    PanelModule,
+    MessagesModule,
+    MessageModule,
+    ToastModule,
+    DropdownModule,
+    InputMaskModule,
+    FieldsetModule,
+    ProgressBarModule,
+    TooltipModule,
+    InputNumberModule,
+    InputTextareaModule,
+    CalendarModule,
+    KeyFilterModule,
+    FocusTrapModule,
+    ContextMenuModule,
+    ConfirmDialogModule,
+    AutoCompleteModule,
+    TreeModule,
+    TreeTableModule
   ],
-  providers: [],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'pt' },
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
