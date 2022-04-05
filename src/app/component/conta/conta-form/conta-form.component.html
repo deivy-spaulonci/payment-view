@@ -1,0 +1,126 @@
+<div style="left: 50%; width: 750px; position: absolute; margin-left: -375px; ">
+
+  <p-progressBar *ngIf="loading" mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+
+  <p-panel header="Cadastro Despesa" [toggleable]="false" [style]="{'width': '750px'}">
+    <form [formGroup]="contaForm" (ngSubmit)="onSubmit(contaForm.value)">
+      <div class="grid">
+        <label class="col-fixed ajuste-col">Numero: </label>
+        <div class="col">
+          <input type="text" pInputText [(ngModel)]="contaCadastro.numero"
+                 formControlName="inputNumero" maxlength="60" size="50"/>
+          <p-message severity="error" text="Número obrigatório"
+                     *ngIf="!contaForm.controls['inputNumero'].valid
+                     && contaForm.controls['inputNumero'].dirty">
+          </p-message>
+        </div>
+      </div>
+
+      <div class="grid">
+        <label class="col-fixed ajuste-col">Cod. Barras: </label>
+        <div class="col">
+          <p-inputMask [(ngModel)]="contaCadastro.codigoBarra"
+                       characterPattern="[0-9]"
+                       [style]="{'width':'100%'}"
+                       mask="99999999999999999999999999999999999999999999999"
+                       formControlName="inputCodigoBarra">
+          </p-inputMask>
+          <p-message severity="error" text="Código de Barras obrigatória"
+                     *ngIf="!contaForm.controls['inputCodigoBarra'].valid
+                     && contaForm.controls['inputCodigoBarra'].dirty">
+          </p-message>
+        </div>
+      </div>
+
+      <div class="grid">
+        <label class="col-fixed ajuste-col">Conta: </label>
+        <div class="col">
+          <p-dropdown [options]="tiposConta"
+                      optionLabel="nome"
+                      [resetFilterOnHide]="true"
+                      [(ngModel)]="contaCadastro.tipoConta"
+                      formControlName="comboTipoConta"
+                      [filter]="true"
+                      scrollHeight="400px"
+                      [style]="{'width': '300px'}">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="grid">
+        <label class="col-fixed ajuste-col">Emissão: </label>
+        <div class="col">
+          <p-inputMask mask="99/99/9999"
+                       [(ngModel)]="contaCadastro.emissao"
+                       formControlName="inputEmissao">
+          </p-inputMask>
+          <p-message severity="error" text="Emissão obrigatória"
+                     *ngIf="!contaForm.controls['inputEmissao'].valid
+                     && contaForm.controls['inputEmissao'].dirty">
+          </p-message>
+        </div>
+
+        <label class="col-fixed ajuste-col">Vencimento: </label>
+        <div class="col">
+          <p-inputMask mask="99/99/9999"
+                       [(ngModel)]="contaCadastro.vencimento"
+                       formControlName="inputEmissao">
+          </p-inputMask>
+          <p-message severity="error" text="Vencimento obrigatória"
+                     *ngIf="!contaForm.controls['inputVencimento'].valid
+                     && contaForm.controls['inputVencimento'].dirty">
+          </p-message>
+        </div>
+      </div>
+
+      <div class="grid">
+        <label class="col-fixed ajuste-col">Parcelas: </label>
+        <div class="col">
+          <p-inputMask mask="99" [autoClear]="false"
+                       [style]="{'max-width': '60px'}"
+                       [(ngModel)]="contaCadastro.parcela"
+                       formControlName="inputParcela"
+                       slotChar="">
+          </p-inputMask> /
+          <p-inputMask mask="990" [autoClear]="false"
+                       [style]="{'max-width': '60px'}"
+                       [(ngModel)]="contaCadastro.totalParcela"
+                       formControlName="inputTotalParcela"
+                       slotChar="">
+          </p-inputMask>
+        </div>
+      </div>
+
+      <div class="grid">
+        <label class="col-fixed ajuste-col">Valor: </label>
+        <div class="col">
+          <input type="text" pInputText
+                 (keyup)="maskaraMoeda($event)"
+                 (onblur)="maskaraMoeda($event)"
+                 [(ngModel)]="contaCadastro.valor"
+                 formControlName="inputValor"/>
+          <p-message severity="error" text="Valor obrigatório"
+                     *ngIf="!contaForm.controls['inputValor'].valid && contaForm.controls['inputValor'].dirty">
+          </p-message>
+        </div>
+      </div>
+
+      <div class="grid">
+        <label class="col-fixed ajuste-col">Observação: </label>
+        <div class="col">
+           <textarea pInputTextarea style="width: 400px; height: 40px;"
+                     [(ngModel)]="contaCadastro.obs"
+                     formControlName="inputObservacao">
+            </textarea>
+        </div>
+      </div>
+
+    </form>
+  </p-panel>
+
+  <!--  <p-message severity="success"-->
+  <!--             text=" {{total | currency:'BRL':true:'1.2-2'}}">-->
+  <!--  </p-message>-->
+
+
+</div>

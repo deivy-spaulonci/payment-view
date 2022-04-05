@@ -21,24 +21,33 @@ export class AppComponent {
       {
         label: 'Despesa',
         icon: 'pi pi-fw pi-money-bill',
-        routerLink: ['/despesa-list']
+        items: [
+          {label: 'Cadastro', routerLink: ['/despesa-form'], icon: 'pi pi-fw pi-plus-circle'},
+          {label: 'Consulta', routerLink: ['/despesa-list'], icon: 'pi pi-fw pi-bars'},
+          {label: 'Tipo Despesa', routerLink: ['/tipo-despesa'], icon: 'pi pi-fw pi-chevron-circle-right'},
+        ]
       },
       {
         label: 'Conta',
-        icon: 'pi pi-fw pi-dollar'
+        icon: 'pi pi-fw pi-dollar',
+        items: [
+          {label: 'Cadastro', routerLink: ['/conta-form'], icon: 'pi pi-fw pi-plus-circle'},
+          {label: 'Consulta', routerLink: ['/conta-list'], icon: 'pi pi-fw pi-bars'},
+        ]
       },
       {
         label: 'Fornecedor',
-        icon: 'pi pi-fw pi-box'
+        icon: 'pi pi-fw pi-box',
+        items: [
+          {label: 'Cadastro', routerLink: ['/fornecedor-form'], icon: 'pi pi-fw pi-plus-circle'},
+          {label: 'Consulta', routerLink: ['/fornecedor-list'], icon: 'pi pi-fw pi-bars'},
+        ]
       },
-      // {
-      //   label: 'Edit',
-      //   icon: 'pi pi-fw pi-pencil',
-      //   items: [
-      //     {label: 'Delete', icon: 'pi pi-fw pi-trash'},
-      //     {label: 'Refresh', icon: 'pi pi-fw pi-refresh'}
-      //   ]
-      // }
+      {
+        label: 'Forma Pagamento',
+        icon: 'pi pi-fw pi-credit-card',
+        routerLink: ['/forma-pagamento']
+      },
     ];
   }
 }

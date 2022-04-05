@@ -28,35 +28,37 @@ export class DespesaListComponent implements OnInit {
   despesas!: any[];
   // tabela
   pageNumber = 0;
-  pageSize = 15;
+  pageSize = 10;
   totalElements = 0;
   util: Util = new Util();
+
+  detalharDespesa:boolean = false;
 
   constructor(private router: Router,
               private defaultService: DefaultService,
               private messageService: MessageService,
               private confirmationService: ConfirmationService) {
-
   }
 
   ngOnInit(): void {
     this.loading = true;
 
-    this.cols = [
-      {field: 'id', header: 'ID', width: '25px'},
-      {field: 'tipoDespesa', header: 'Despesa', width: '55px'},
+  this.cols = [
+      {field: 'id', header: 'ID', width: '20px'},
+      {field: 'tipoDespesa', header: 'Despesa', width: '150px'},
       {field: 'fornecedor', header: 'Fornecedor', width: '200px'},
-      {field: 'data', header: 'Data', width: '80px'},
-      {field: 'formaPagamento', header: 'Forma Pagamento', width: '80px'},
-      {field: 'valor', header: 'Valor', width: '40px'},
-      {field: null, header: 'Editar', width: '28px'},
-      {field: null, header: 'Excluir', width: '28px'}
+      {field: 'data', header: 'Data', width: '160px'},
+      {field: 'formaPagamento', header: 'Forma Pagamento', width: '130px'},
+      {field: 'valor', header: 'Valor', width: '35px'}
     ];
 
     this.items = [
-      {label: 'Visualizar', icon: 'pi pi-fw pi-search', command: () => console.log('this.selectedProduct')},
-      {label: 'Excluir', icon: 'pi pi-fw pi-times', command: () => this.excluirDespesa(this.despesaSelecionada) },
-      {label: 'Editar', icon: 'pi pi-fw pi-pencil', command: () => this.editarDespesa(this.despesaSelecionada) }
+      {label: 'Visualizar', icon: 'pi pi-fw pi-search',
+        command: () => this.detalharDespesa = true},
+      {label: 'Excluir', icon: 'pi pi-fw pi-times',
+        command: () => this.excluirDespesa() },
+      {label: 'Editar', icon: 'pi pi-fw pi-pencil',
+        command: () => this.editarDespesa() }
     ];
 
     this.defaultService.get('tipo-despesa').subscribe(tipos => {
@@ -76,34 +78,27 @@ export class DespesaListComponent implements OnInit {
     });
   }
 
-  excluirDespesa(despesa: Despesa) {
-    //   this.confirmationService.confirm({
-    //     message: 'Deseja realmente excluir essa despesa?',
-    //     header: 'Confirmar Exclusão',
-    //     icon: 'pi pi-exclamation-triangle',
-    //     accept: () => {
-    //       this.defaultService.delete(despesa, 'despesa').subscribe(resultado =>{
-    //         this.despesas = this.despesas.filter(val => val.id !== despesa.id);
-    //         this.messageService.add({severity:'success', summary: 'Sucesso', detail: 'Despesa excluída'});
-    //       });
-    //     }
-    //   });
+  excluirDespesa(){
+      this.confirmationService.confirm({
+        message: 'Deseja realmente excluir essa despesa?',
+        header: 'Confirmar Exclusão',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.defaultService
+            .delete(this.despesaSelecionada, 'despesa')
+            .subscribe(resultado =>{
+              this.despesas = this.despesas.filter(val => val.id !== this.despesaSelecionada.id);
+              this.messageService.add({severity:'success', summary: 'Sucesso', detail: 'Despesa excluída'});
+          });
+        }
+      });
   }
 
-
-  editarDespesa(despesa: Despesa) {
-    //   this.router.navigate(['/form-despesa', {id: despesa.id}]);
-    // }
-    //
-    // maskaraMoeda($event: KeyboardEvent) {
-    //   const element = ($event.target as HTMLInputElement);
-    //   element.value = this.util.formatFloatToReal(element.value);
+  editarDespesa(){
+    this.router.navigate(['/despesa-form', {id: this.despesaSelecionada.id}]);
   }
-
 
   loadData(event: LazyLoadEvent) {
-
-    console.log('>>>> ' +JSON.stringify(event));
     // in a real application, make a remote request to load data using state metadata from event
     // event.first = First row offset
     // event.rows = Number of rows per page
@@ -156,7 +151,6 @@ export class DespesaListComponent implements OnInit {
       this.defaultService.get('despesa/valorTotal?' + urlfiltros).subscribe(somatotal => {
         this.totalValor = somatotal;
       });
-      this.messageService.add({severity: 'info', summary: 'Success', detail: 'Despesas carregadas'});
     });
   }
 

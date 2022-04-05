@@ -39,10 +39,20 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {TreeModule} from 'primeng/tree';
 import {TreeTableModule} from 'primeng/treetable';
+import {DialogModule} from 'primeng/dialog';
 
 import ptBr from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { DespesaFormComponent } from './component/despesa/despesa-form/despesa-form.component';
+import { FornecedorListComponent } from './component/fornecedor/fornecedor-list/fornecedor-list.component';
+import { CepPipe } from './pipe/cep.pipe';
+import { CnpjPipe } from './pipe/cnpj.pipe';
+import { FornecedorFormComponent } from './component/fornecedor/fornecedor-form/fornecedor-form.component';
+import { TipoDespesaComponent } from './component/tipo-despesa/tipo-despesa.component';
+import { FormaPagamentoComponent } from './component/forma-pagamento/forma-pagamento.component';
+import { ContaListComponent } from './component/conta/conta-list/conta-list.component';
+import { ContaFormComponent } from './component/conta/conta-form/conta-form.component';
+import { DatebrPipe } from './pipe/datebr.pipe';
 
 registerLocaleData(ptBr);
 
@@ -51,7 +61,16 @@ registerLocaleData(ptBr);
     AppComponent,
     DespesaListComponent,
     HomeComponent,
-    DespesaFormComponent
+    DespesaFormComponent,
+    FornecedorListComponent,
+    CepPipe,
+    CnpjPipe,
+    FornecedorFormComponent,
+    TipoDespesaComponent,
+    FormaPagamentoComponent,
+    ContaListComponent,
+    ContaFormComponent,
+    DatebrPipe
   ],
   imports: [
     BrowserModule,
@@ -88,7 +107,8 @@ registerLocaleData(ptBr);
     ConfirmDialogModule,
     AutoCompleteModule,
     TreeModule,
-    TreeTableModule
+    TreeTableModule,
+    DialogModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },

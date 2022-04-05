@@ -1,0 +1,206 @@
+<div style="left: 50%; width: 1200px; position: absolute; margin-left: -600px; ">
+
+  <p-toast [style]="{marginTop: '80px'}" position="top-center"></p-toast>
+
+  <p-progressBar *ngIf="loading" mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+
+  <p-panel header="Conta" [toggleable]="false">
+
+    <div class="grid">
+      <div class="col-fixed" style="width: 70px;">
+        <input pInputText type="text"
+               [style]="{'width':'50px'}" placeholder="id"
+               (input)="dt.filter($event.target.value, 'id', 'contains')">
+      </div>
+      <div class="col-fixed" style="width: 350px;">
+        <p-dropdown [options]="tiposConta"
+                    [style]="{'width':'100%'}"
+                    scrollHeight="350px"
+                    optionLabel="nome"
+                    [showClear]="true"
+                    (onChange)="dt.filter($event.value, 'tipoConta', 'equals')">
+        </p-dropdown>
+      </div>
+      <div class="col-fixed" style="width: 220px;">
+        <p-inputMask mask="99/99/9999"
+                     placeholder="99/99/9999"
+                     slotChar="dd/mm/yyyy"
+                     #emissaoInicial
+                     [style]="{'width':'90px'}"
+                     (onComplete)="dt.filter(emissaoInicial.value, 'emissaoInicial', 'equals')">
+        </p-inputMask>
+        até
+        <p-inputMask mask="99/99/9999"
+                     placeholder="99/99/9999"
+                     slotChar="dd/mm/yyyy"
+                     #emissaoFinal
+                     [style]="{'width':'90px'}"
+                     (onComplete)="dt.filter(emissaoFinal.value, 'emissaoFinal', 'equals')">
+        </p-inputMask>
+      </div>
+      <div class="col-fixed" style="width: 300px;">
+        <p-inputMask mask="99/99/9999"
+                     placeholder="99/99/9999"
+                     slotChar="dd/mm/yyyy"
+                     #vencimentoInicial
+                     [style]="{'width':'90px'}"
+                     (onComplete)="dt.filter(vencimentoInicial.value, 'vencimentoInicial', 'equals')">
+        </p-inputMask>
+        até
+        <p-inputMask mask="99/99/9999"
+                     placeholder="99/99/9999"
+                     slotChar="dd/mm/yyyy"
+                     #vencimentoFinal
+                     [style]="{'width':'90px'}"
+                     (onComplete)="dt.filter(vencimentoFinal.value, 'vencimentoFinal', 'equals')">
+        </p-inputMask>
+      </div>
+    </div>
+
+    <p-table [value]="contas"
+             [columns]="cols"
+             [loading]="loading"
+             [lazy]="true"
+             (onLazyLoad)="loadData($event)"
+             [rowsPerPageOptions]="[10,15,20,25,30,40]"
+             [alwaysShowPaginator]="true"
+             [paginator]="true"
+             [showCurrentPageReport]="true"
+             [totalRecords]="totalElements"
+             [rows]="pageSize"
+             sortField="vencimento"
+             [sortOrder]="-1"
+             currentPageReportTemplate="Mostrando {first} a {last} de {{totalElements}} contas"
+             dataKey="id" #dt
+             styleClass="p-datatable-striped p-datatable-sm"
+             [contextMenu]="cm" [(contextMenuSelection)]="contaSelecionada">
+      <ng-template pTemplate="header">
+        <tr>
+          <th *ngFor="let col of cols" [pSortableColumn]="col.field"
+              [ngStyle]="{'width': col.width, 'text-align': 'center'}">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"
+                        *ngIf="col.field && col.field != 'valor' && col.field != 'parcela'">
+            </p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-conta let-ri="rowIndex">
+        <tr pTooltip="{{conta.obs}}" tooltipPosition="top" [pContextMenuRow]="conta">
+          <td style="text-align: center;">{{conta.id}}</td>
+          <td>{{conta.tipoConta.nome}}</td>
+          <td style="color: steelblue; font-weight: bolder; text-align: center;">
+            {{conta.emissao | date: 'dd/MM/yyyy'}}
+          </td>
+          <td style="color: steelblue; font-weight: bolder; text-align: center;">
+            {{conta.vencimento | date: 'dd/MM/yyyy'}}
+          </td>
+          <td style="text-align:center;">{{conta.parcela}}/{{conta.totalParcela}}</td>
+          <td style="text-align:right;">
+            {{conta.valor | number : '1.2-2'}}
+          </td>
+          <td style="text-align:center;">
+            <span *ngIf="conta.intStatus==1" class="pi pi-circle-off" style="color: darkblue;"> {{conta.status}}</span>
+            <span *ngIf="conta.intStatus==0" class="pi pi-bell"
+                  style="color: blue; border:1px solid yellow;"> {{conta.status}}</span>
+            <span *ngIf="conta.intStatus==-1" class="pi pi-exclamation-triangle"
+                  style="color: red; font-size: 14px;"> {{conta.status}}</span>
+            <span *ngIf="conta.intStatus==2" class="pi pi-check-square"
+                  style="color: cadetblue;"> {{conta.status}}</span>
+            <span *ngIf="conta.intStatus==3" class="pi pi-times"> {{conta.status}}</span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length-1" style='text-align: right;'>Total:</td>
+          <td style="text-align: right;">{{totalValor | number : '1.2-2' }}</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+
+  </p-panel>
+
+</div>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+<p-contextMenu #cm [model]="items"></p-contextMenu>
+
+<p-dialog header="Detalhe Conta" [(visible)]="detalharConta" [style]="{width: '50vw'}" [modal]="true">
+
+  <div class="grid">
+    <div class="col-12" style="text-align: right;">
+      <span *ngIf="contaSelecionada?.intStatus==1" class="pi pi-circle-off"
+            style="color: darkblue;"> {{contaSelecionada?.status}}</span>
+      <span *ngIf="contaSelecionada?.intStatus==0" class="pi pi-bell"
+            style="color: blue; border:1px solid yellow;"> {{contaSelecionada?.status}}</span>
+      <span *ngIf="contaSelecionada?.intStatus==-1" class="pi pi-exclamation-triangle"
+            style="color: red; font-size: 14px;"> {{contaSelecionada?.status}}</span>
+      <span *ngIf="contaSelecionada?.intStatus==2" class="pi pi-check-square"
+            style="color: cadetblue;"> {{contaSelecionada?.status}}</span>
+      <span *ngIf="contaSelecionada?.intStatus==3" class="pi pi-times">
+            {{contaSelecionada?.status}}</span>
+    </div>
+
+    <div class="col-2">Id:</div>
+    <div class="col-10">{{contaSelecionada?.id}}</div>
+    <div class="col-2">Conta:</div>
+    <div class="col-10">{{contaSelecionada?.tipoConta?.nome}}</div>
+    <div class="col-2">Número:</div>
+    <div class="col-10">{{contaSelecionada?.numero}}</div>
+    <div class="col-2">Código Barra:</div>
+    <div class="col-10">{{contaSelecionada?.codigoBarra}}</div>
+
+    <div class="col-2">Emissao:</div>
+    <div class="col-2">{{contaSelecionada?.emissao | datebr}}</div>
+    <div class="col-2">Vencimento:</div>
+    <div class="col-6">{{contaSelecionada?.vencimento | datebr}}</div>
+
+    <div class="col-2">Valor: R$</div>
+    <div class="col-2">{{contaSelecionada?.valor | number : '1.2-2' }}</div>
+    <div class="col-1">Parcelas:</div>
+    <div class="col-7">{{contaSelecionada?.parcela}} / {{contaSelecionada?.totalParcela}}</div>
+    <div class="col-2">Obs:</div>
+    <div class="col-10">{{contaSelecionada?.obs}}</div>
+  </div>
+  <div class="grid" style="border: 1px solid gainsboro; margin: 10px 0px;">
+    <div class="col-12">Pagamento</div>
+    <div class="col-3">Data Pagamento:</div>
+    <div class="col-2">{{contaSelecionada?.dataPagamento | datebr}}</div>
+    <div class="col-3">Forma Pagamento:</div>
+    <div class="col-3">{{contaSelecionada?.formaPagamento?.nome}}</div>
+    <div class="col-3">Valor Pago: R$</div>
+    <div class="col-9">{{contaSelecionada?.valor | number : '1.2-2' }}</div>
+  </div>
+
+  <div class="grid" style="border: 1px solid gainsboro; margin: 10px 0px;">
+    <div class="col-12">Lançamentos conta cartão</div>
+
+    <p-table *ngIf="contaSelecionada?.lancamentoContaCartao"
+             [value]="contaSelecionada!.lancamentoContaCartao"
+             [scrollable]="true"
+             scrollHeight="300px"
+             columnResizeMode="fit"
+             style="width: 100%;">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="max-width: 100px;">Data</th>
+          <th>Fornecedor</th>
+          <th style="max-width: 100px;">Valor</th>
+          <th style="max-width: 100px;">Parcelas</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-lanc>
+        <tr>
+          <td style="max-width: 100px;">{{lanc.data | date: 'dd/MM/yyyy'}}</td>
+          <td>{{lanc.fornecedor.nome}}</td>
+          <td style="max-width: 100px;">{{lanc.valor | number : '1.2-2'}}</td>
+          <td style="max-width: 100px;">{{lanc.parcela}}/{{lanc.totalParcela}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+</p-dialog>

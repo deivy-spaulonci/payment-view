@@ -1,145 +1,148 @@
-<p-toast [style]="{marginTop: '80px'}" position="top-center"></p-toast>
+<div style="left: 50%; width: 1300px; position: absolute; margin-left: -650px; ">
 
-<p-progressBar *ngIf="loading" mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+  <p-toast [style]="{marginTop: '80px'}" position="top-center"></p-toast>
 
-<p-panel header="Despesa" [toggleable]="false">
+  <p-progressBar *ngIf="loading" mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
 
-  <ng-template pTemplate="icons">
-<!--    <button pButton pRipple label="Save" icon="pi pi-plus" label="Cadastrar Despesa" [routerLink]="['/form-despesa']"></button>-->
+  <p-panel header="Despesa" [toggleable]="false">
+    <div class="grid">
+      <div class="col-fixed" style="width: 70px;">
+        <input pInputText type="text" [style]="{'width':'50px'}" placeholder="id"
+               (input)="dt.filter($event.target.value, 'id', 'contains')">
+      </div>
+      <div class="col-fixed" style="width: 250px;">
+        <p-dropdown [options]="tiposDespesas"
+                    optionLabel="nome"
+                    [showClear]="true"
+                    [filter]="true"
+                    [style]="{'width':'100%'}"
+                    filterBy="nome"
+                    placeholder="Tipo"
+                    scrollHeight="350px"
+                    (onChange)="dt.filter($event.value, 'tipoDespesa', 'equals')">
+        </p-dropdown>
+      </div>
+      <div class="col">
+        <p-dropdown [options]="fornecedores"
+                    [filter]="true"
+                    [showClear]="true"
+                    [style]="{'width':'100%'}"
+                    filterBy="nome"
+                    optionLabel="nome"
+                    scrollHeight="350px"
+                    placeholder="Fornecedor"
+                    [filter]="true" filterBy="nome"
+                    (onChange)="dt.filter($event.value, 'fornecedor', 'equals')">
+        </p-dropdown>
+      </div>
+      <div class="col-fixed" style="width: 250px; text-align: center">
+        <p-inputMask mask="99/99/9999"
+                     placeholder="99/99/9999"
+                     slotChar="dd/mm/yyyy"
+                     #inicio
+                     [style]="{'width':'95px'}"
+                     (onComplete)="dt.filter(inicio.value, 'inicio', 'equals')">
+        </p-inputMask>
+        até
+        <p-inputMask mask="99/99/9999"
+                     placeholder="99/99/9999"
+                     slotChar="dd/mm/yyyy"
+                     #final
+                     [style]="{'width':'95px'}"
+                     (onComplete)="dt.filter(final.value, 'final', 'equals')">
+        </p-inputMask>
+      </div>
+      <div class="col-fixed" style="width: 250px;">
+        <p-dropdown [options]="formasPagamento"
+                    [style]="{'width':'100%'}"
+                    optionLabel="nome"
+                    [showClear]="true"
+                    [filter]="true" filterBy="nome"
+                    placeholder="Forma Pagamento"
+                    scrollHeight="350px"
+                    (onChange)="dt.filter($event.value, 'formaPagamento', 'equals')">
+        </p-dropdown>
+      </div>
+    </div>
 
-  </ng-template>
+    <p-table [value]="despesas"
+             [columns]="cols"
+             [loading]="loading"
+             [lazy]="true"
+             (onLazyLoad)="loadData($event)"
+             [rowsPerPageOptions]="[10,15,20,25,30,40]"
+             [alwaysShowPaginator]="true"
+             [paginator]="true"
+             [showCurrentPageReport]="true"
+             [totalRecords]="totalElements"
+             [rows]="pageSize"
+             [sortOrder]="-1"
+             sortField="data"
+             currentPageReportTemplate="Mostrando {first} a {last} de {{totalElements}} despesas"
+             dataKey="id" #dt
+             selectionMode="single"
+             styleClass="p-datatable-striped p-datatable-sm"
+             [contextMenu]="cm"
+             [(contextMenuSelection)]="despesaSelecionada">
+      <ng-template pTemplate="header">
+        <tr>
+          <th *ngFor="let col of cols" [pSortableColumn]="col.field"
+              [ngStyle]="{'width': col.width, 'text-align': 'center'}">
+            {{col.header}}
+            <p-sortIcon [field]="col.field" *ngIf="col.field && col.field != 'valor' "></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
 
-  <p-table [value]="despesas" [columns]="cols" [loading]="loading"
-           [lazy]="true" (onLazyLoad)="loadData($event)"
-           [rowsPerPageOptions]="[10,15,20,25,30,40]" [alwaysShowPaginator]="true"
-           [paginator]="true" [showCurrentPageReport]="true"
-           [totalRecords]="totalElements" [rows]="pageSize"
-           sortField="data" [sortOrder]="-1"
-           currentPageReportTemplate="Mostrando {first} a {last} de {{totalElements}} despesas"
-           dataKey="id" #dt
-           styleClass="p-datatable-striped p-datatable-sm"
-           [contextMenu]="cm" [(contextMenuSelection)]="despesaSelecionada">
-    <ng-template pTemplate="header">
-      <tr>
-        <th [ngStyle]="{'width': '3%'}"></th>
-        <th *ngFor="let col of cols" [pSortableColumn]="col.field"
-            [ngStyle]="{'width': col.width, 'text-align': 'center'}">
-          {{col.header}}
-          <p-sortIcon [field]="col.field" *ngIf="col.field && col.field != 'valor' "></p-sortIcon>
-        </th>
-      </tr>
-      <tr>
-        <th [ngStyle]="{'width': '20px'}"></th>
-        <th *ngFor="let col of cols" [ngSwitch]="col.field">
-          <input *ngSwitchCase="'id'"
-                 pInputText type="text"
-                 (input)="dt.filter($event.target.value, col.field, 'contains')"
-                 style="width: 98%;">
-          <p-dropdown *ngSwitchCase="'tipoDespesa'"
-                      [options]="tiposDespesas"
-                      [style]="{'width':'100%'}"
-                      optionLabel="nome"
-                      [showClear]="true"
-                      [filter]="true" filterBy="nome"
-                      scrollHeight="350px"
-                      (onChange)="dt.filter($event.value, col.field, 'equals')">
-          </p-dropdown>
-          <p-dropdown *ngSwitchCase="'fornecedor'"
-                      [filter]="true" filterBy="nome"
-                      [showClear]="true"
-                      [options]="fornecedores"
-                      [style]="{'width':'100%'}"
-                      optionLabel="nome"
-                      scrollHeight="350px"
-                      [filter]="true" filterBy="nome"
-                      (onChange)="dt.filter($event.value, col.field, 'equals')">
-          </p-dropdown>
-          <div *ngSwitchCase="'data'" [ngStyle]="{'text-align': 'center'}">
-            <p-inputMask mask="99/99/9999"
-                         placeholder="99/99/9999"
-                         slotChar="dd/mm/yyyy"
-                         #inicio
-                         [style]="{'width':'95px'}"
-                         (onComplete)="dt.filter(inicio.value, 'inicio', 'equals')">
-            </p-inputMask> até
-            <p-inputMask mask="99/99/9999"
-                         placeholder="99/99/9999"
-                         slotChar="dd/mm/yyyy"
-                         #final
-                         [style]="{'width':'95px'}"
-                         (onComplete)="dt.filter(final.value, 'final', 'equals')">
-            </p-inputMask>
-          </div>
-          <p-dropdown *ngSwitchCase="'formaPagamento'"
-                      [options]="formasPagamento"
-                      [style]="{'width':'100%'}"
-                      optionLabel="nome"
-                      [showClear]="true"
-                      [filter]="true" filterBy="nome"
-                      scrollHeight="350px"
-                      (onChange)="dt.filter($event.value, col.field, 'equals')">
-          </p-dropdown>
-        </th>
-      </tr>
-    </ng-template>
+      <ng-template pTemplate="body" let-despesa let-expanded="expanded" let-ri="rowIndex">
+        <tr pTooltip="{{despesa.obs}}" tooltipPosition="top" [pContextMenuRow]="despesa">
+          <td style="text-align: center;">{{despesa.id}}</td>
+          <td>{{despesa.tipoDespesa.nome}}</td>
+          <td>{{despesa.fornecedor.nome}}</td>
+          <td style="color: steelblue; font-weight: bolder; text-align: center;">
+            {{despesa.data | date: 'dd/MM/yyyy'}}
+          </td>
+          <td>{{despesa.formaPagamento.nome}}</td>
+          <td style="text-align: right;">
+            {{despesa.valor | currency : 'BRL'}}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length-1" style='text-align: right;'>Total:</td>
+          <td style="text-align: right;">{{totalValor | number : '1.2-2' }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
 
-    <ng-template pTemplate="body" let-despesa let-expanded="expanded" let-ri="rowIndex">
-      <tr pTooltip="{{despesa.obs}}" tooltipPosition="top" [pContextMenuRow]="despesa">
-        <td>
-          <button type="button"
-                  pButton pRipple
-                  [pRowToggler]="despesa"
-                  *ngIf="despesa.obs || despesa.informacaoExtra.length"
-                  class="p-button-text p-button-rounded p-button-plain p-button-sm"
-                  [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
-          </button>
-        </td>
-        <td style="text-align: center;">{{despesa.id}}</td>
-        <td>{{despesa.tipoDespesa.nome}}</td>
-        <td>{{despesa.fornecedor.nome}}</td>
-        <td style="color: steelblue; font-weight: bolder; text-align: center;">
-          {{despesa.data | date: 'dd/MM/yyyy'}}
-        </td>
-        <td>{{despesa.formaPagamento.nome}}</td>
-        <td style="text-align: right;">
-          {{despesa.valor | currency : 'BRL'}}
-        </td>
-        <td style="text-align:center">
-          <button pButton pRipple type="button"
-                  icon="pi pi-pencil" [routerLink]="['/form-despesa', { id: despesa.id }]"
-                  class="p-button-rounded p-button-text p-button-sm">
-          </button>
-        </td>
-        <td style="text-align:center">
-          <button pButton pRipple type="button"
-                  icon="pi pi-times" (click)="excluirDespesa(despesa)"
-                  class="p-button-rounded p-button-text p-button-danger">
-          </button>
-        </td>
-      </tr>
-    </ng-template>
+  </p-panel>
 
-    <ng-template pTemplate="rowexpansion" let-despesa>
-      <tr>
-        <td colspan="9">
-          <p-panel header="Infomação Extra" *ngIf="despesa.informacaoExtra.length > 0">
-            <div class="grid" *ngFor="let inf of despesa.informacaoExtra">
-              <div class="col-1">{{inf.tipoInformacaoExtra.nome}}: </div>
-              <div class="col-11">{{inf.numero}}</div>
-            </div>
-          </p-panel>
-          <h3>Observação: {{despesa.obs}}</h3>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="footer" let-columns>
-      <tr>
-        <td [attr.colspan]="columns.length" style='text-align: right;'>Total:</td>
-        <td style="text-align: right;">{{totalValor | number : '1.2-2' }}</td>
-      </tr>
-    </ng-template>
-  </p-table>
-  <p-contextMenu #cm [model]="items"></p-contextMenu>
-</p-panel>
+</div>
+<p-contextMenu #cm [model]="items"></p-contextMenu>
 
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+<p-dialog header="Detalhe Despesa" [(visible)]="detalharDespesa" [style]="{width: '50vw'}" [modal]="true">
+  <div class="grid">
+    <div class="col-3">Id: </div>
+    <div class="col-9">{{despesaSelecionada?.id}}</div>
+    <div class="col-3">Despesa: </div>
+    <div class="col-9">{{despesaSelecionada?.tipoDespesa?.nome}}</div>
+    <div class="col-3">Fornecedor: </div>
+    <div class="col-9">{{despesaSelecionada?.fornecedor?.nome}}</div>
+    <div class="col-3">Data: </div>
+    <div class="col-9">{{despesaSelecionada?.data | datebr}}</div>
+    <div class="col-3">Forma Pagamento: </div>
+    <div class="col-9">{{despesaSelecionada?.formaPagamento?.nome}}</div>
+    <div class="col-3">Valor: </div>
+    <div class="col-9">{{despesaSelecionada?.valor | currency : 'BRL'}}</div>
+  </div>
+  <p-panel header="Infomação Extra" *ngIf="despesaSelecionada?.informacaoExtra" [style]="{'width': '50%'}">
+    <div class="grid" *ngFor="let inf of despesaSelecionada?.informacaoExtra">
+      <div class="col-4">{{inf.tipoInformacaoExtra.nome}}:</div>
+      <div class="col-4">{{inf.numero}}</div>
+    </div>
+  </p-panel>
+  <h3>Observação: {{despesaSelecionada?.obs}}</h3>
+</p-dialog>

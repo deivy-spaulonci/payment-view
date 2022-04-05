@@ -7,7 +7,7 @@ export class Despesa {
   id!: number;
   tipoDespesa!: TipoDespesa;
   fornecedor!: Fornecedor;
-  data!: Date;
+  data!: String;
   formaPagamento!: FormaPagamento;
   valor!: number;
   obs!: string;

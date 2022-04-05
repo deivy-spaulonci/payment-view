@@ -1,0 +1,113 @@
+<p-toast [style]="{marginTop: '80px'}" position="top-center"></p-toast>
+
+<p-progressBar *ngIf="loading" mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+
+<p-panel header="Fornecedor" [toggleable]="false">
+
+  <ng-template pTemplate="icons">
+    <button pButton pRipple label="Save"
+            icon="pi pi-plus"
+            label="Cadastrar Fornecedor"
+            style="margin: 0;"
+            [routerLink]="['/fornecedor-form']">
+    </button>
+  </ng-template>
+
+  <p-table [value]="fornecedores" [columns]="cols" [loading]="loading"
+           [lazy]="true" (onLazyLoad)="loadData($event)"
+           [rowsPerPageOptions]="[10,15,20,25,30,40]" [alwaysShowPaginator]="true" [paginator]="true"
+           [showCurrentPageReport]="true" [totalRecords]="totalElements"
+           [rows]="pageSize" sortField="nome"
+           currentPageReportTemplate="Mostrando {first} a {last} de {{totalElements}} fornecedores"
+           dataKey="id" #dt
+           styleClass="p-datatable-striped p-datatable-sm" [contextMenu]="cm"
+           [(contextMenuSelection)]="fornecedorSelecionado">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let col of cols" [pSortableColumn]="col.field"
+            [ngStyle]="{'width': col.width, 'text-align': 'center'}">
+          {{col.header}}
+          <p-sortIcon [field]="col.field" *ngIf="col.field"></p-sortIcon>
+        </th>
+      </tr>
+      <tr>
+        <th *ngFor="let col of cols" [ngSwitch]="col.field">
+          <input *ngSwitchCase="'id'"
+                 pInputText type="text"
+                 (input)="dt.filter($event.target.value, col.field, 'contains')"
+                 style="width: 98%;">
+          <input *ngSwitchCase="'nome'"
+                 pInputText type="text"
+                 (input)="dt.filter($event.target.value, col.field, 'contains')"
+                 style="width: 98%;">
+          <input *ngSwitchCase="'cnpj'"
+                 pInputText type="text"
+                 (input)="dt.filter($event.target.value, col.field, 'contains')"
+                 style="width: 98%;">
+          <input *ngSwitchCase="'cidade'"
+                 pInputText type="text"
+                 (input)="dt.filter($event.target.value, col.field, 'contains')"
+                 style="width: 98%;">
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-fornecedor let-expanded="expanded" let-ri="rowIndex">
+      <tr [pContextMenuRow]="fornecedor">
+        <td>
+          <button type="button"
+                  pButton pRipple
+                  [pRowToggler]="fornecedor"
+                  class="p-button-text p-button-rounded p-button-plain p-button-sm"
+                  [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+          </button>
+        </td>
+        <td style="text-align: center;">{{fornecedor.id}}</td>
+        <td>{{fornecedor.nome}}</td>
+        <td style="text-align: center;">{{fornecedor.cnpj | cnpj}}</td>
+        <td>{{fornecedor.cidade.nome}} - {{fornecedor.cidade.estado}}</td>
+        <td style="text-align:center">
+          <button pButton pRipple type="button"
+                  icon="pi pi-pencil" [routerLink]="['/form-fornecedor', { id: fornecedor.id }]"
+                  class="p-button-rounded p-button-text p-button-sm">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="rowexpansion" let-fornecedor>
+      <tr>
+        <td colspan="6">
+          <p-panel header="Dados" [toggleable]="true">
+            <div class="p-grid">
+              <div class="p-col-1">Razão Socinal: </div>
+              <div class="p-col-11 destacado">{{fornecedor.razaoSocial}}</div>
+
+              <div class="p-col-1">CNPJ: </div>
+              <div class="p-col-11 destacado">{{fornecedor.cnpj | cnpj}}</div>
+              <div class="p-col-1">Insc. Estadual: </div>
+              <div class="p-col-11 destacado">{{fornecedor.inscricaoEstadual}}</div>
+
+              <div class="p-col-1">Endereço: </div>
+              <div class="p-col-11 destacado">{{fornecedor.endereco}} - {{fornecedor.complemento}}</div>
+              <div class="p-col-1">Bairro: </div>
+              <div class="p-col-11 destacado">{{fornecedor.bairro}}</div>
+              <div class="p-col-1">Cidade: </div>
+              <div class="p-col-11 destacado">{{fornecedor.cidade.nome}} - {{fornecedor.cidade.estado.sigla}}</div>
+              <div class="p-col-1">Cep: </div>
+              <div class="p-col-11 destacado">{{fornecedor.cep | cep}}</div>
+
+              <div class="p-col-1">Telefone: </div>
+              <div class="p-col-11 destacado">{{fornecedor.telefone}}</div>
+            </div>
+          </p-panel>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-contextMenu #cm [model]="items"></p-contextMenu>
+</p-panel>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

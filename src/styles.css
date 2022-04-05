@@ -5,4 +5,20 @@
 html, body{
   margin: 0;
   padding: 0;
+  background-color: whitesmoke;
 }
+
+input{
+  border-radius: 0 !important;
+}
+*{
+  border-radius: 0 !important;
+}
+
+.destacado{
+  font-weight: bold;
+  font-style: italic;
+}
+
+
+
