@@ -1,1 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/nano/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+*{
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  border-radius: 0px !important;
+}
+body{
+  padding:0;
+  margin:0;
+}
+.display-table {
+  display: table;
+}
+.display-table > div {
+  display: table-row;
+}
+.display-table > div > div {
+  display: table-cell;
+  padding: 5px;
+}
+
+.text-right{
+  text-align: right;
+}
+.text-center{
+  text-align: center;
+}
+.text-left{
+  text-align: left;
+}
