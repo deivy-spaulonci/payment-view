@@ -1,0 +1,140 @@
+
+<p-table #dt
+         [value]="despesas"
+         [loading]="loading"
+         [lazy]="true"
+         [columns]="cols"
+         (onLazyLoad)="loadData($event)"
+         [totalRecords]="totalElements"
+         [sortOrder]="-1"
+         [sortField]="sortField"
+         selectionMode="single"
+         dataKey="id"
+         [scrollable]="true"
+         scrollHeight="flex"
+         responsiveLayout="stack"
+         styleClass="p-datatable-striped p-datatable-gridlines"
+         [(contextMenuSelection)]="despesaSelecionada">
+
+  <ng-template pTemplate="caption">
+    <p-toolbar [style]="{'padding':'0', 'border':'none'}">
+      <div class="p-toolbar-group-start">
+      </div>
+      <div class="p-toolbar-group-end">
+        <p-button label="Filtros" icon="pi pi-filter" (click)="filtroDespesaVisible = true"></p-button>
+      </div>
+    </p-toolbar>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-cols>
+    <tr>
+      <th *ngFor="let col of cols"
+          [pSortableColumn]="col.field"
+          [ngStyle]="{'width': col.width, 'text-align': 'center'}">
+        {{col.header}}
+        <p-sortIcon [field]="col.field"
+                    style="float: right"
+                    *ngIf="col.field && col.field != 'valor'">
+        </p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-despesa let-ri="rowIndex">
+    <tr pTooltip="{{despesa.obs}}" tooltipPosition="top" [pContextMenuRow]="despesa">
+      <td class="text-center">{{despesa.id}}</td>
+      <td>{{despesa.tipoDespesa.nome}}</td>
+      <td>{{despesa.fornecedor.nome}}</td>
+      <td class="text-center">{{despesa.data | date: 'dd/MM/yyyy'}}</td>
+      <td>{{despesa.formaPagamento.nome}}</td>
+      <td class="text-right">{{despesa.valor | currency : 'BRL'}}</td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="footer" let-columns>
+    <tr>
+      <td [attr.colspan]="columns.length-1" style='text-align: right;'>Total:</td>
+      <td style="text-align: right;">{{totalValor | currency:'BRL'}}</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+
+<p-sidebar [(visible)]="filtroDespesaVisible" position="right" [style]="{'width':'380px'}">
+  <h3>Filtros Despesas</h3>
+
+  <div class="display-table" >
+    <div>
+      <div>Id:</div>
+      <div>
+        <input type="text" pInputText [style]="{'width':'100px'}" [(ngModel)]="filtros.id"/>
+      </div>
+    </div>
+    <div>
+      <div>Tipo:</div>
+      <div>
+        <p-dropdown [options]="tiposDespesa"
+                    scrollHeight="400px"
+                    placeholder="todos"
+                    [style]="{'width':'150px'}"
+                    optionLabel="nome"
+                    filterBy="nome"
+                    [filter]="true"
+                    [(ngModel)]="filtros.tipoDespesa"
+                    [showClear]="true">
+        </p-dropdown>
+      </div>
+    </div>
+    <div>
+      <div>Fornecedor:</div>
+      <div>
+        <p-autoComplete  [suggestions]="filtredFornecedores"
+                         (completeMethod)="filtroFornecedores($event)"
+                         [showClear]="true"
+                         [inputStyle]="{'width':'250px'}"
+                         optionLabel="nome"
+                         [(ngModel)]="filtros.fornecedor"
+                         placeholder="todos"
+                         scrollHeight="400px">
+        </p-autoComplete>
+      </div>
+    </div>
+    <div>
+      <div>Pagamento:</div>
+      <div>
+        <p-dropdown [options]="formasPagamento"
+                    scrollHeight="400px"
+                    placeholder="todos"
+                    [style]="{'width':'250px'}"
+                    optionLabel="nome"
+                    filterBy="nome"
+                    [filter]="true"
+                    [(ngModel)]="filtros.formaPagamento"
+                    [showClear]="true">
+        </p-dropdown>
+      </div>
+    </div>
+    <div>
+      <div>Periodo:</div>
+      <div>
+        <p-inputMask mask="99/99/9999"
+                     placeholder="99/99/9999"
+                     [(ngModel)]="filtros.periodoInicial"
+                     [style]="{'width':'110px'}">
+        </p-inputMask>
+        até:
+        <p-inputMask mask="99/99/9999"
+                     placeholder="99/99/9999"
+                     [(ngModel)]="filtros.periodoFinal"
+                     [style]="{'width':'110px'}">
+        </p-inputMask>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+  <br/>
+
+  <p-button label="Filtrar" icon="pi pi-filter" [style]="{'width':'auto'}" (onClick)="dt._filter()">
+  </p-button>
+</p-sidebar>
