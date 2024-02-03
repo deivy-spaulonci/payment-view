@@ -1,0 +1,16 @@
+.row-atrasado {
+  background-color: var(--red-100) !important;
+  /*color: var(--primary-color-text)*/
+}
+.row-hoje {
+  background-color: var(--yellow-100) !important;
+}
+.row-aberto {
+  background-color: var(--blue-100) !important;
+}
+
+.testButtom{
+  width: 200px;
+  padding: 3px;
+  text-align: center;
+}
