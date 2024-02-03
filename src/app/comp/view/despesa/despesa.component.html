@@ -3,10 +3,11 @@
 <app-formdespesa [tiposDespesa]="tiposDespesa"
                  [formasPagamento]="formasPagamento"
                  [fornecedores]="fornecedores"
-                 (refreshTable)="loadTable($event)">
-
+                 (saveDespesa)="salvarDespesa($event)">
 </app-formdespesa>
 
 <app-listdespesa [tiposDespesa]="tiposDespesa" #listDespesa
                  [formasPagamento]="formasPagamento"
-                 [fornecedores]="fornecedores"></app-listdespesa>
+                 [fornecedores]="fornecedores"
+                 (saveDespesa)="salvarDespesa($event)">
+</app-listdespesa>

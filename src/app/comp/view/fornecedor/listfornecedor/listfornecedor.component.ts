@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {DefaultService} from "../../../../sevice/default.service";
-import {TableLazyLoadEvent} from "primeng/table";
+import {Table, TableLazyLoadEvent} from "primeng/table";
 import {Fornecedor} from "../../../../model/fornecedor";
+import {Despesa} from "../../../../model/despesa";
 
 @Component({
   selector: 'app-listfornecedor',
@@ -17,8 +18,10 @@ export class ListfornecedorComponent implements OnInit{
   loading:boolean=false;
   // tabela
   pageNumber = 0;
-  pageSize = 20;
+  pageSize = 15;
   totalElements = 0;
+  @ViewChild('dt') table?:Table;
+  @Output() saveFornecedor: EventEmitter<Fornecedor> = new EventEmitter();
 
   constructor(private defaultService: DefaultService) {
   }
@@ -29,6 +32,7 @@ export class ListfornecedorComponent implements OnInit{
       {field: 'nome', header: 'Nome', width: 'auto'},
       {field: 'cnpj', header: 'CNPJ', width: '170px'},
       {field: 'cidade', header: 'Cidade', width: '250px'},
+      {field: null, header: 'Editar', width: '100px'}
     ];
   }
 
@@ -65,12 +69,18 @@ export class ListfornecedorComponent implements OnInit{
       + '&sort=' + event.sortField + ',' + (event.sortOrder == 1 ? 'asc' : 'desc')
       + urlfiltros;
 
-    console.log(url);
-
     this.defaultService.get(url).subscribe(resultado => {
       this.fornecedores = resultado.content;
       this.totalElements = resultado.totalElements;
       this.loading = false;
     });
+  }
+
+  onRowEditSave(fornecedor: Fornecedor) {
+    this.saveFornecedor.emit(fornecedor);
+  }
+
+  refreshTable(){
+    this.table?._filter();
   }
 }

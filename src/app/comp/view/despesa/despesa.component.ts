@@ -20,11 +20,8 @@ export class DespesaComponent implements OnInit{
   loading:boolean = false;
   @ViewChild('listDespesa') child?:ListdespesaComponent;
 
-  constructor(private defaultService: DefaultService) {
-  }
-
-  loadTable(event:any){
-    this.child?.refreshTable();
+  constructor(private messageService: MessageService,
+              private defaultService: DefaultService) {
   }
 
   ngOnInit(): void {
@@ -38,6 +35,23 @@ export class DespesaComponent implements OnInit{
           this.loading = false;
         });
       });
+    });
+  }
+
+  salvarDespesa(event:any){
+    this.defaultService.save(event, 'despesa').
+    subscribe({
+      next: resultado =>{
+        this.messageService.add({severity: 'info', summary: 'Sucesso', detail: 'Despesa salva com sucesso'});
+      },
+      error: error =>{
+        this.loading = false;
+        this.messageService.add({severity: 'error', summary: 'Erro', detail: error.message});
+      },
+      complete: () => {
+        this.child?.refreshTable();
+        this.loading = false;
+      }
     });
   }
 }

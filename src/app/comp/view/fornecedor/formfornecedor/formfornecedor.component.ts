@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {DefaultService} from "../../../../sevice/default.service";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Fornecedor} from "../../../../model/fornecedor";
 import {Util} from "../../../../util/util";
 import {Cidade} from "../../../../model/cidade";
 import {MessageService} from "primeng/api";
+import {Despesa} from "../../../../model/despesa";
 
 @Component({
   selector: 'app-formfornecedor',
@@ -12,6 +13,8 @@ import {MessageService} from "primeng/api";
   styleUrl: './formfornecedor.component.css'
 })
 export class FormfornecedorComponent implements OnInit{
+
+  @Output() saveFornecedor: EventEmitter<Fornecedor> = new EventEmitter();
 
   util: Util = new Util();
   fornecedorCadastro:Fornecedor=new Fornecedor();
@@ -82,22 +85,7 @@ export class FormfornecedorComponent implements OnInit{
     this.fornecedorCadastro.cidade = this.fornecedorform.controls['inputCidade'].value;
     this.fornecedorCadastro.cnpj = this.fornecedorform.controls['inputCNPJ'].value.replace(/\D/g, "");
     this.fornecedorCadastro.cidade = this.cidade;
-    this.defaultService.save(this.fornecedorCadastro, 'fornecedor')
-      .subscribe({
-        next: resultado => {
-          this.messageService.add({severity: 'info', summary: 'Sucesso', detail: 'Fornecedor salva com sucesso'});
-        },
-        error: error => {
-          this.messageService.add({severity: 'error', summary: 'Erro', detail: error.message});
-          this.loading = false;
-        },
-        complete: () => {
-          this.fornecedorform.reset();
-          this.fornecedorCadastro = new Fornecedor();
-          this.fornecedorCadastro.cidade = new Cidade();
 
-          this.loading = false;
-        }
-      });
+    this.saveFornecedor.emit(this.fornecedorCadastro);
   }
 }

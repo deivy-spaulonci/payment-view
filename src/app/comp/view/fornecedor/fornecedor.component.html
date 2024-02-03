@@ -1,5 +1,9 @@
 
 <p-toast [style]="{marginTop: '80px'}" position="top-center"></p-toast>
 
-<app-formfornecedor></app-formfornecedor>
-<app-listfornecedor></app-listfornecedor>
+<app-formfornecedor
+  (saveFornecedor)="salvarFornecedor($event)">
+</app-formfornecedor>
+<app-listfornecedor #listDespesa
+  (saveFornecedor)="salvarFornecedor($event)">
+</app-listfornecedor>

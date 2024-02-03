@@ -16,6 +16,7 @@ body{
 }
 .display-table {
   display: table;
+
 }
 .display-table > div {
   display: table-row;
@@ -23,6 +24,7 @@ body{
 .display-table > div > div {
   display: table-cell;
   padding: 5px;
+  vertical-align: middle;
 }
 
 .text-right{

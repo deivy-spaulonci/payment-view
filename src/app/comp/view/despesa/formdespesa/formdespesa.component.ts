@@ -19,7 +19,8 @@ export class FormdespesaComponent  implements OnInit{
   @Input() tiposDespesa:TipoDespesa[]= [];
   @Input() fornecedores:Fornecedor[]= [];
   @Input() formasPagamento:FormaPagamento[]= [];
-  @Output() refreshTable: EventEmitter<void> = new EventEmitter();
+  // @Output() refreshTable: EventEmitter<void> = new EventEmitter();
+  @Output() saveDespesa: EventEmitter<Despesa> = new EventEmitter();
   //
   loading:boolean=false;
   util: Util = new Util();
@@ -61,7 +62,7 @@ export class FormdespesaComponent  implements OnInit{
     }
     this.filtredFornecedores = filtered;
   }
-  onSubmit(value: string) {
+  async onSubmit(value: string) {
     this.loading = true;
     this.despesaCadastro.fornecedor = this.despesaform.controls['autoCompleteFornecedor'].value;
 
@@ -72,25 +73,8 @@ export class FormdespesaComponent  implements OnInit{
 
     this.despesaCadastro.obs = this.despesaform.controls['inputObservacao'].value;
 
-    console.log(JSON.stringify(this.despesaCadastro));
-
-    this.defaultService.save(this.despesaCadastro, 'despesa').
-    subscribe({
-      next: resultado =>{
-        this.messageService.add({severity: 'info', summary: 'Sucesso', detail: 'Despesa salva com sucesso'});
-      },
-      error: error =>{
-        this.loading = false;
-        this.messageService.add({severity: 'error', summary: 'Erro', detail: error.message});
-      },
-      complete: () => {
-        this.despesaCadastro = new Despesa();
-        this.despesaCadastro.fornecedor = new Fornecedor();
-        this.despesaform.reset();
-        this.refreshTable.emit();
-        this.loading = false;
-      }
-    })
+    await this.saveDespesa.emit(this.despesaCadastro);
+    this.despesaform.controls['inputValor'].setValue( 0);
   }
 
   maskaraMoeda($event: KeyboardEvent) {

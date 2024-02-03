@@ -6,7 +6,7 @@ export class Util {
 
   dateToDataBR(data: String){
     const dataarr  = data.toString().split('-');
-    return dataarr[2] + '/' + dataarr[1] + '/ ' + dataarr[0]
+    return dataarr[2] + '/' + dataarr[1] + '/' + dataarr[0]
   }
 
   formatFloatToReal(valor: string): string{

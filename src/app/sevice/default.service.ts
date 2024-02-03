@@ -19,7 +19,7 @@ export class DefaultService {
     console.log(this.url+api);
     return this.http.get<any>(this.url + api, this.httpOptions)
       .pipe(
-        tap(_ => console.log('fetched any ss')),
+        tap(_ => console.log('')),
         catchError(this.handleError<any[]>('get', []))
       );
   }

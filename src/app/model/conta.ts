@@ -1,6 +1,7 @@
 import {TipoConta} from "./tipo-conta";
 import {FormaPagamento} from "./forma-pagamento";
 import {LancamentoContaCartao} from "./lancamento-conta-cartao";
+import {Fatura} from "./fatura";
 
 export class Conta {
   id!: number;
@@ -10,7 +11,7 @@ export class Conta {
   emissao!: String;
   vencimento!:  String;
   parcela!: number;
-  totalParcela!: number;
+  totalParcelas!: number;
   valor!: number;
   dataPagamento?: String;
   formaPagamento?: FormaPagamento;
@@ -21,5 +22,5 @@ export class Conta {
   lancamentoContaCartao!: LancamentoContaCartao[];
   status!: string;
   intStatus!: number;
-
+  faturas!: Fatura[];
 }

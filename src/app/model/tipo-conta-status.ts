@@ -1,5 +1,4 @@
-export enum TipoContaStatus {
-  ATIVO,
-  FINALIZADO,
-  CANCELADO
+export class TipoContaStatus {
+  value!: string;
+  nome!: string;
 }

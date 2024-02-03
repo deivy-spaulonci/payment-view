@@ -2,6 +2,10 @@ import {LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpClientModule} from "@angular/common/http";
 
+import {registerLocaleData} from "@angular/common";
+
+import localept from '@angular/common/locales/pt';
+
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {DashboardComponent} from './comp/view/dashboard/dashboard.component';
@@ -33,10 +37,20 @@ import {ProgressBarModule} from 'primeng/progressbar';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ToolbarModule} from 'primeng/toolbar';
 import { SidebarModule } from 'primeng/sidebar';
-import {registerLocaleData} from "@angular/common";
-
-import localept from '@angular/common/locales/pt';
 import {MessageModule} from "primeng/message";
+import {ContextMenuModule} from "primeng/contextmenu";
+import {RippleModule} from "primeng/ripple";
+import {CalendarModule} from "primeng/calendar";
+import { ListcontaComponent } from './comp/view/conta/listconta/listconta.component';
+import {TabViewModule} from "primeng/tabview";
+import { FormcontaComponent } from './comp/view/conta/formconta/formconta.component';
+import {ContaComponent} from "./comp/view/conta/conta.component";
+import {CardModule} from "primeng/card";
+import {DividerModule} from "primeng/divider";
+import { DatabrPipe } from './pipe/databr.pipe';
+import {CheckboxModule} from "primeng/checkbox";
+import {ToggleButtonModule} from "primeng/togglebutton";
+import {ListboxModule} from "primeng/listbox";
 
 registerLocaleData(localept, 'pt');
 
@@ -51,7 +65,11 @@ registerLocaleData(localept, 'pt');
     LoadingComponent,
     DespesaComponent,
     FormdespesaComponent,
-    ListdespesaComponent
+    ListdespesaComponent,
+    ListcontaComponent,
+    ContaComponent,
+    FormcontaComponent,
+    DatabrPipe
   ],
   imports: [
     BrowserModule,
@@ -78,7 +96,16 @@ registerLocaleData(localept, 'pt');
     ProgressSpinnerModule,
     ToolbarModule,
     SidebarModule,
-    MessageModule
+    MessageModule,
+    ContextMenuModule,
+    RippleModule,
+    CalendarModule,
+    TabViewModule,
+    CardModule,
+    DividerModule,
+    CheckboxModule,
+    ToggleButtonModule,
+    ListboxModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },
