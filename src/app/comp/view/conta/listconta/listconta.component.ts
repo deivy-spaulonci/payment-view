@@ -1,11 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Message, MessageService} from "primeng/api";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {MenuItem, Message, MessageService} from "primeng/api";
 import {DefaultService} from "../../../../sevice/default.service";
 import {Conta} from "../../../../model/conta";
 import {TableLazyLoadEvent} from "primeng/table";
-import {FormaPagamento} from "../../../../model/forma-pagamento";
 import {TipoConta} from "../../../../model/tipo-conta";
-import {TipoDespesa} from "../../../../model/tipo-despesa";
 import {Util} from "../../../../util/util";
 
 @Component({
@@ -15,13 +13,8 @@ import {Util} from "../../../../util/util";
   providers: [MessageService]
 })
 export class ListcontaComponent implements OnInit {
-  @Input() tiposConta:TipoConta[]= [];
 
-  success: Message[] | [];
-  info: Message[] | [];
-  warn: Message[] | [];
-  error: Message[] | [];
-
+  tiposConta:TipoConta[] = [];
   contas:Conta[] = [];
   contaSelecionada!:Conta;
   cols!: any[];
@@ -32,22 +25,34 @@ export class ListcontaComponent implements OnInit {
   sortField:string='vencimento';
   filtroContaVisible: boolean=false;
   util: Util = new Util();
+  status!:any[];
+  items!: MenuItem[];
+
+
   filtros:any={
     tipoConta:TipoConta,
-    formaPagamento:FormaPagamento,
+    statusSelected:{},
     vencimentoInicial: String,
     vencimentoFinal: String
   };
 
   constructor(private messageService: MessageService,
               private defaultService: DefaultService) {
-    this.success = [{ severity: 'success', summary: 'Em Aberto', detail: '' }];
-    this.info = [{ severity: 'info', summary: 'Pago', detail: '' }];
-    this.warn = [{ severity: 'warn', summary: 'Vencimento Hoje', detail: '' }];
-    this.error = [{ severity: 'error', summary: 'Conta Atrasada', detail: '' }];
 
     this.filtros.vencimentoInicial = null;
     this.filtros.vencimentoFinal = null;
+
+    this.status = [
+      { nome: 'PAGOS', code: '2' },
+      { nome: 'VENCIMENTO HOJE', code: '0' },
+      { nome: 'ATRASADO', code: '-1' },
+      { nome: 'EM ABERTO', code: '1'}
+    ];
+
+    this.items = [
+      { label: 'Editar', icon: 'pi pi-fw pi-pencil', command: () => console.log('nao implementado ainda') },
+      { label: 'Excluir', icon: 'pi pi-fw pi-trash', command: () => this.excluirConta() }
+    ];
   }
 
   ngOnInit(): void {
@@ -62,6 +67,9 @@ export class ListcontaComponent implements OnInit {
       {field: 'status', header: 'Status', width: '70px'},
     ];
 
+    this.defaultService.get('tipo-conta').subscribe(tipos => {
+      this.tiposConta = tipos;
+    });
   }
 
   loadData(event: TableLazyLoadEvent) {
@@ -75,6 +83,10 @@ export class ListcontaComponent implements OnInit {
 
     if(this.filtros.tipoConta && this.filtros.tipoConta.id)
       urlfiltros += '&tipoConta=' + this.filtros.tipoConta.id;
+
+    if(this.filtros.statusSelected && this.filtros.statusSelected.code){
+      urlfiltros += '&status=' + this.filtros.statusSelected.code;
+    }
 
 
     event.rows = (event.rows ? event.rows : this.pageSize);
@@ -96,13 +108,26 @@ export class ListcontaComponent implements OnInit {
     });
   }
 
-  filtrar(){
-
-  }
   limparFiltros(){
     this.filtros.vencimentoInicial = '';
     this.filtros.vencimentoFinal = '';
     this.filtros.tipoConta = null;
-    this.filtros.formaPagamento = null;
+    this.filtros.statusSelected = {};
+
+  }
+
+  excluirConta() {
+    return undefined;
+  }
+
+  onRowSelect($event: any) {
+    this.messageService.clear();
+
+    switch (this.contaSelecionada.intStatus) {
+      case 2 : this.messageService.add({ severity: 'info', summary: 'Pago', detail: '' }); break;
+      case 1 : this.messageService.add({ severity: 'success', summary: 'Em Aberto', detail: '' }); break;
+      case 0 : this.messageService.add({ severity: 'warn', summary: 'Vencimento Hoje', detail: '' }); break;
+      case -1 : this.messageService.add({ severity: 'error', summary: 'Conta Atrasada', detail: '' }); break;
+    }
   }
 }

@@ -36,3 +36,8 @@ body{
 .text-left{
   text-align: left;
 }
+
+.margPad0{
+  margin:0px;
+  padding:0px;
+}

@@ -8,6 +8,7 @@ import {TipoDespesa} from "../../../../model/tipo-despesa";
 import {Fornecedor} from "../../../../model/fornecedor";
 import {FormaPagamento} from "../../../../model/forma-pagamento";
 import {AutoCompleteCompleteEvent} from "primeng/autocomplete";
+import {Fatura} from "../../../../model/fatura";
 
 @Component({
   selector: 'app-formdespesa',
@@ -62,6 +63,7 @@ export class FormdespesaComponent  implements OnInit{
     }
     this.filtredFornecedores = filtered;
   }
+
   async onSubmit(value: string) {
     this.loading = true;
     this.despesaCadastro.fornecedor = this.despesaform.controls['autoCompleteFornecedor'].value;

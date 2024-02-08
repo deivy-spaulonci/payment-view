@@ -4,13 +4,14 @@ import {DashboardComponent} from "./comp/view/dashboard/dashboard.component";
 import {FornecedorComponent} from "./comp/view/fornecedor/fornecedor.component";
 import {DespesaComponent} from "./comp/view/despesa/despesa.component";
 import {ListcontaComponent} from "./comp/view/conta/listconta/listconta.component";
-import {ContaComponent} from "./comp/view/conta/conta.component";
+import {FormcontaComponent} from "./comp/view/conta/formconta/formconta.component";
 
 const routes: Routes = [
   {path:"", component: DashboardComponent, pathMatch: "full"},
   {path:"fornecedor", component: FornecedorComponent},
   {path:"despesa", component: DespesaComponent},
-  {path:"conta", component: ContaComponent},
+  {path:"formConta", component: FormcontaComponent},
+  {path:"listConta", component: ListcontaComponent},
 ];
 
 @NgModule({

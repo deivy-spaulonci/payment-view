@@ -44,13 +44,15 @@ import {CalendarModule} from "primeng/calendar";
 import { ListcontaComponent } from './comp/view/conta/listconta/listconta.component';
 import {TabViewModule} from "primeng/tabview";
 import { FormcontaComponent } from './comp/view/conta/formconta/formconta.component';
-import {ContaComponent} from "./comp/view/conta/conta.component";
 import {CardModule} from "primeng/card";
 import {DividerModule} from "primeng/divider";
 import { DatabrPipe } from './pipe/databr.pipe';
 import {CheckboxModule} from "primeng/checkbox";
 import {ToggleButtonModule} from "primeng/togglebutton";
 import {ListboxModule} from "primeng/listbox";
+import {InputTextareaModule} from "primeng/inputtextarea";
+import { InputNumberModule } from 'primeng/inputnumber';
+import {TabMenuModule} from "primeng/tabmenu";
 
 registerLocaleData(localept, 'pt');
 
@@ -67,7 +69,6 @@ registerLocaleData(localept, 'pt');
     FormdespesaComponent,
     ListdespesaComponent,
     ListcontaComponent,
-    ContaComponent,
     FormcontaComponent,
     DatabrPipe
   ],
@@ -105,7 +106,10 @@ registerLocaleData(localept, 'pt');
     DividerModule,
     CheckboxModule,
     ToggleButtonModule,
-    ListboxModule
+    ListboxModule,
+    InputTextareaModule,
+    InputNumberModule,
+    TabMenuModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },

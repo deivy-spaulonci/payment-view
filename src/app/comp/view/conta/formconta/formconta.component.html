@@ -1,1 +1,216 @@
-<p>formconta works!</p>
+<form [formGroup]="contaform" (ngSubmit)="onSubmit(contaform.value)">
+  <div class="display-table">
+    <div>
+      <div>Cód. Barras:</div>
+      <div>
+        <p-inputMask mask="999999999999999999999999999999999999999999999999"
+                     [style]="{'width': '330px'}"
+                     formControlName="inputCodigoBarra"
+                     placeholder="************************************************">
+        </p-inputMask>
+      </div>
+    </div>
+    <div>
+      <div>Tipo:</div>
+      <div>
+        <p-dropdown [options]="tiposConta"
+                    optionLabel="nome"
+                    [filter]="true"
+                    formControlName="comboTipoConta"
+                    (onChange)="contaCadastro.tipoConta= $event.value"
+                    scrollHeight="250"
+                    filterBy="nome"
+                    [style]="{'width':'200px'}">
+        </p-dropdown>
+      </div>
+    </div>
+    <div>
+      <div>Emissão:</div>
+      <div>
+        <p-inputMask mask="99/99/9999"
+                     placeholder="99/99/9999"
+                     slotChar="dd/mm/yyyy"
+                     formControlName="inputEmissao"
+                     [style]="{'width':'100px'}">
+        </p-inputMask>
+      </div>
+      <div>Vencimento:</div>
+      <div>
+        <p-inputMask mask="99/99/9999"
+                     placeholder="99/99/9999"
+                     slotChar="dd/mm/yyyy"
+                     formControlName="inputVencimento"
+                     [style]="{'width':'100px'}">
+        </p-inputMask>
+      </div>
+    </div>
+    <div>
+      <div>Valor: </div>
+      <div>
+        <input type="text"
+               (keyup)="maskaraMoeda($event)"
+               pInputText
+               style="width: 200px"
+               formControlName="inputValor" />
+      </div>
+      <div>Parcelas : </div>
+      <div>
+        <p-inputMask mask="999"
+                     [(ngModel)]="contaCadastro.parcela"
+                     [autoClear]="false"
+                     [style]="{'width': '50px'}"
+                     placeholder="***">
+        </p-inputMask> /
+        <p-inputMask mask="999"
+                     [(ngModel)]="contaCadastro.totalParcelas"
+                     [autoClear]="false"
+                     [style]="{'width': '50px'}"
+                     placeholder="***">
+        </p-inputMask>
+
+
+      </div>
+    </div>
+    <div>
+      <div>Obs: </div>
+      <div>
+        <textarea rows="2"
+                  cols="30"
+                  pInputTextarea
+                  formControlName="inputObservacao">
+        </textarea>
+      </div>
+    </div>
+  </div>
+
+  <p-card header="Pagamento" [style]="{'width':'650px','margin':'20px 0px 20px 0px'}">
+    <div class="display-table">
+      <div>
+        <div>Forma: </div>
+        <div>
+          <p-dropdown [options]="formasPagamento"
+                      optionLabel="nome"
+                      [filter]="true"
+                      filterBy="nome"
+                      formControlName="comboFormaPagamento"
+                      (onChange)="contaCadastro.formaPagamento = $event.value"
+                      scrollHeight="250"
+                      [style]="{'width':'200px'}">
+          </p-dropdown>
+        </div>
+        <div>Data:</div>
+        <div>
+          <p-inputMask mask="99/99/9999"
+                       placeholder="99/99/9999"
+                       slotChar="dd/mm/yyyy"
+                       formControlName="inputVencimento"
+                       [style]="{'width':'100px'}">
+          </p-inputMask>
+        </div>
+      </div>
+    </div>
+  </p-card>
+
+  <p-card *ngIf="contaCadastro.tipoConta && contaCadastro.tipoConta.contaCartao"
+          header="Faturas" [style]="{'width':'650px','margin-bottom':'30px'}">
+    <div class="display-table" >
+      <div>
+        <div>Fornecedor: </div>
+        <div>
+          <p-autoComplete [suggestions]="filtredFornecedores"
+                          (completeMethod)="filtroFornecedores($event)"
+                          [(ngModel)]="fatura.fornecedor"
+                          optionLabel="nome"
+                          [inputStyle]="{'width': '500px'}"
+                          [forceSelection]="true"
+                          scrollHeight="400px"
+                          [ngModelOptions]="{standalone: true}"
+                          [style]="{'width': '500px'}"
+                          [minLength]="1">
+            <ng-template let-value pTemplate="selectedItem">
+              <span>>{{value}}</span>
+            </ng-template>
+            <ng-template let-brand pTemplate="item">
+              <span style="font-size:12px;">{{brand.nome}}</span>
+              <span style="float: right;">{{brand.cidade.nome + ' - ' + brand.cidade.estado}}</span>
+            </ng-template>
+          </p-autoComplete>
+        </div>
+      </div>
+    </div>
+
+    <div class="display-table" >
+      <div>
+        <div>Data:</div>
+        <div>
+          <p-inputMask mask="99/99/9999"
+                       placeholder="99/99/9999"
+                       slotChar="dd/mm/yyyy"
+                       [ngModelOptions]="{standalone: true}"
+                       [(ngModel)]="fatura.data"
+                       [style]="{'width':'80px'}">
+          </p-inputMask>
+        </div>
+        <div>Valor:</div>
+        <div>
+          <input type="text"
+                 (keyup)="maskaraMoeda($event)"
+                 pInputText
+                 [ngModelOptions]="{standalone: true}"
+                 style="width: 100px"
+                 [(ngModel)]="fatura.valor" />
+        </div>
+        <div>Parcelas:</div>
+        <div>
+          <p-inputMask mask="999"
+                       [autoClear]="false"
+                       [style]="{'width': '50px'}"
+                       placeholder="***"
+                       [ngModelOptions]="{standalone: true}"
+                       [(ngModel)]="fatura.parcela">
+          </p-inputMask> /
+          <p-inputMask mask="999"
+                       [autoClear]="false"
+                       [style]="{'width': '50px'}"
+                       [ngModelOptions]="{standalone: true}"
+                       placeholder="***"
+                       [(ngModel)]="fatura.totalParcelas">
+          </p-inputMask>
+        </div>
+        <div>
+          <p-button label="Adicinar fatura" icon="pi pi-plus" (click)="addFatura()">
+          </p-button>
+        </div>
+      </div>
+    </div>
+
+    <p><p-divider></p-divider></p>
+
+    <p-table [value]="contaCadastro.faturas"
+             scrollHeight="350px"
+             responsiveLayout="stack"
+             [scrollable]="true"
+             styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th [ngStyle]="{'width': '90px'}">Data</th>
+          <th [ngStyle]="{'width': '90px'}">Parcelas</th>
+          <th [ngStyle]="{'width': '90px'}">Valor</th>
+          <th>Fornecedor</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-fatura>
+        <tr>
+          <td class="text-center">{{ fatura.data | databr}}</td>
+          <td class="text-center">{{ fatura.parcela }}/{{fatura.totalParcelas}}</td>
+          <td class="text-right">{{ fatura.valor  | currency : 'BRL'}}</td>
+          <td>{{ fatura.fornecedor.nome }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </p-card>
+
+  <p-button type="Submit" label="Salvar" icon="pi pi-save"
+            [style]="{'width': '100px'}" [disabled]="!contaform.valid"></p-button>
+</form>
